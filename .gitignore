@@ -1,0 +1,7 @@
+.idea/ 
+/dump
+*.pyc  
+.cache 
+.ropeproject 
+*.swp 
+*.swo
