@@ -5,3 +5,5 @@
 .ropeproject 
 *.swp 
 *.swo
+__pycache__/
+
