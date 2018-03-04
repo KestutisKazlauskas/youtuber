@@ -23,6 +23,8 @@ def create_app(config_name):
     # register blueprints of the app
     # TODO make url config
     from app.video import video_blueprint
+    from app.tags import tag_blueprint
     app.register_blueprint(video_blueprint)
+    app.register_blueprint(tag_blueprint)
 
     return app
