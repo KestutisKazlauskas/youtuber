@@ -2,7 +2,8 @@ from flask import request
 from flask_api import response
 
 from app.common.helpers.api_view import MainMethodView
-from app.video.models import Tag, Video
+from app.video.models import Video
+from app.tags.models import Tag
 from . import video_blueprint
 
 
@@ -34,6 +35,7 @@ class VideoView(MainMethodView):
 
         return response.APIResponse(data)
 
+
 # register video view api and make urls
 video_view = VideoView.as_view('video_view')
-video_blueprint.add_url_rule('/api/video', view_func=video_view, methods=['GET'])
+video_blueprint.add_url_rule('/api/videos', view_func=video_view, methods=['GET'])
