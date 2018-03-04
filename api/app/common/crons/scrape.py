@@ -5,7 +5,8 @@ from sqlalchemy.sql import text
 from app import db
 from app.common.helpers.common import is_string
 from app.common.helpers.youtube_api import YouTubeApi
-from app.video.models import Video, Tag
+from app.video.models import Video
+from app.tags.models import Tag
 
 
 class YoutubeChannelScrapeJob:
