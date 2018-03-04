@@ -11,6 +11,7 @@ class MainConfig:
 class DevelopmentConfig(MainConfig):
     """Configurations for DEVELOPMENT"""
     DEBUG = True
+    YOUTUBE_API_KEY = os.getenv('YOUTUBE_API_KEY')
 
 
 class TestingConfig(MainConfig):
