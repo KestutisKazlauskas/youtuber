@@ -20,4 +20,9 @@ def create_app(config_name):
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db.init_app(app)
 
+    # register blueprints of the app
+    # TODO make url config
+    from app.video import video_blueprint
+    app.register_blueprint(video_blueprint)
+
     return app
