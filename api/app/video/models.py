@@ -1,12 +1,12 @@
 from app import db
-from app.chennel.models import Channel
+from app.channel.models import Channel
 from sqlalchemy.sql import func
 from app.common.helpers.common import datetime_to_string
 
 association_table = db.Table(
     'tags',
     db.Column('tag_id', db.Integer, db.ForeignKey('tag.id'), primary_key=True),
-    db.Column('video_id', db.Integer, db.ForeignKey('video.id'), primary_key=True)
+    db.Column('video_id', db.String(20), db.ForeignKey('video.id'), primary_key=True)
 )
 
 
@@ -14,23 +14,10 @@ class Video(db.Model):
     """Class for youtube video statistics table"""
 
     __tablename__ = 'video'
-    __table_args__ = (
-        db.Index(
-            'video_youtube_id',  # Index name
-            'youtube_id',
-            unique=True
-        ),
-    )
 
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String(20), primary_key=True)  # youtube_id
     name = db.Column(db.String(100))
-    youtube_id = db.Column(db.String(20))
-
-    # Statistics if need to track every changes
-    # need to move to other table
     published_at = db.Column(db.DateTime())
-    views_on_creation = db.Column(db.DateTime())
-    views = db.Column(db.Integer())
 
     # calculate after an hour after creation for performance
     first_hour_views = db.Column(db.Integer())
@@ -39,8 +26,9 @@ class Video(db.Model):
         'Tag', secondary=association_table, lazy='subquery',
         backref=db.backref('videos', lazy=True)
     )
-    channel_id = db.Column(db.Integer, db.ForeignKey('channel.id'))
+    channel_id = db.Column(db.String(20), db.ForeignKey('channel.id'))
     channel = db.relationship(Channel)
+    statistics = db.relationship('Statistic')
 
     # TimeStamps
     time_created = db.Column(db.DateTime(), server_default=func.now())
@@ -52,7 +40,6 @@ class Video(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'youtube_id': self.youtube_id,
             'published_at': datetime_to_string(self.published_at),
             'tags': self.tags_serialize
         }
@@ -61,3 +48,20 @@ class Video(db.Model):
     def tags_serialize(self):
         """Method for serializing many to many relationship"""
         return [item.serialize for item in self.tags if self.tags]
+
+
+class Statistic(db.Model):
+    """Class for saving video statistics"""
+
+    __tablename__ = 'statistic'
+
+    id = db.Column(db.BigInteger, primary_key=True)
+    views = db.Column(db.Integer)
+    likes = db.Column(db.Integer)
+    dislikes = db.Column(db.Integer)
+    favorites = db.Column(db.Integer)
+    comments = db.Column(db.Integer)
+    video_id = db.Column(db.String(20), db.ForeignKey('video.id'))
+
+    # Timestamp
+    time_created = db.Column(db.DateTime(), server_default=func.now())
