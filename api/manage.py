@@ -3,8 +3,8 @@ from flask_script import Manager
 from flask_migrate import Migrate, MigrateCommand
 
 from app import db, create_app
-from app.video.models import Video, association_table
-from app.chennel.models import Channel
+from app.video.models import Video, association_table, Statistic
+from app.channel.models import Channel
 from app.tags.models import Tag
 from app.common.crons.scrape import YoutubeChannelScrapeJob
 
@@ -14,6 +14,12 @@ manager = Manager(app)
 
 # adding manager command for migrating database
 manager.add_command('db', MigrateCommand)
+
+@manager.command
+def seed():
+    """Mehtod for adding hardcoded channel"""
+    db.session.add(Channel(name='Laisvės TV', id="UCMfPBtm9CWGswAXohT5MFyQ"))
+    db.session.commit()
 
 
 @manager.command
