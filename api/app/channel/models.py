@@ -9,3 +9,6 @@ class Channel(db.Model):
     id = db.Column(db.String(50), primary_key=True)  # youtube_id
     name = db.Column(db.String(100))
 
+    # all channel videos first hour views medians
+    views_median = db.Column(db.Integer)
+

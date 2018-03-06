@@ -28,7 +28,7 @@ class Video(db.Model):
     )
     channel_id = db.Column(db.String(20), db.ForeignKey('channel.id'))
     channel = db.relationship(Channel)
-    statistics = db.relationship('Statistic')
+    statistics = db.relationship('Statistic', lazy='noload')  # do not load with videos
 
     # TimeStamps
     time_created = db.Column(db.DateTime(), server_default=func.now())
