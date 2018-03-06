@@ -17,6 +17,7 @@ google-auth-oauthlib = "*"
 google-api-python-client = "*"
 flask-script = "*"
 mysqlclient = "*"
+python-dateutil = "*"
 
 
 [dev-packages]
