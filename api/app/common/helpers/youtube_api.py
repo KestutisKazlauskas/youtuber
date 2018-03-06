@@ -47,8 +47,10 @@ class YouTubeApi:
     def find_channel_videos(self, channel_id, limit=50, page_token=None):
         """Method for fetching chennel videos ids"""
         response = self.youtube_client.search().list(
-            part='id,snippet',
+            part='id',
+            fields='items(id(channelId,videoId)),nextPageToken,pageInfo',
             channelId=channel_id,
+            type='video',
             maxResults=limit,
             pageToken=page_token
         ).execute()
@@ -57,34 +59,41 @@ class YouTubeApi:
 
         videos = []
         for item in response.get('items', []):
-            if item['id']['kind'] == 'youtube#video':
-                videos.append(item['id']['videoId'])
+            videos.append(item['id']['videoId'])
 
         return videos
 
     def get_videos_stats(self, video_ids, limit=50, page_token=None):
         """Method for getting statistics of the videos"""
-        response = self.youtube_client.videos().list(
-            part='id,statistics,snippet',
-            id=','.join(video_ids),
-            maxResults=limit,
-            pageToken=page_token
-        ).execute()
+        if video_ids:
+            response = self.youtube_client.videos().list(
+                part='id,statistics,snippet',
+                fields='items(id,snippet(channelId,publishedAt,tags,title),statistics),nextPageToken,pageInfo',
+                id=','.join(video_ids),
+                maxResults=limit,
+                pageToken=page_token
+            ).execute()
 
-        self._set_page_info('video', response)
+            self._set_page_info('video', response)
 
-        videos = []
-        for item in response.get('items', []):
-            videos.append(
-                {
-                    'youtube_id': item['id'],
-                    'name': item['snippet']['title'],
-                    'tags': item['snippet']['tags'],
-                    'published': datetime.strptime(
-                        item['snippet']['publishedAt'], self.date_format
-                    ),
-                    'views': item['statistics']['viewCount']
-                }
-            )
+            videos = []
+            for item in response.get('items', []):
+                videos.append(
+                    {
+                        'youtube_id': item['id'],
+                        'name': item['snippet']['title'],
+                        'tags': item['snippet']['tags'],
+                        'published': datetime.strptime(
+                            item['snippet']['publishedAt'], self.date_format
+                        ),
+                        'views': item['statistics'].get('viewCount', 0),
+                        'likes': item['statistics'].get('likeCount', 0),
+                        'dislikes': item['statistics'].get('dislikeCount', 0),
+                        'favorites': item['statistics'].get('favoriteCount', 0),
+                        'comments': item['statistics'].get('commentCount', 0),
+                    }
+                )
 
-        return videos
+            return videos
+
+        return []
