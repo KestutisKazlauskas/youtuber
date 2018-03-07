@@ -12,27 +12,31 @@ Every 20 minutes cron job scan channel and scrapes videos information and statis
 
 ## How to start an app
 1. Clone the repository:
-```python
+```
 git clone git@github.com:KestutisKazlauskas/youtuber.git 
 ```
 2. In cloned directory run docker build
-```python
+```
 docker-compose build
 ```
 3. In cloned directory run command tu start docker containers
-```python
+```
 sudo docker-compose up -d
 ```
 4. Now you can run front-end and api:
-- Videos Api: ```python
+- Videos Api: 
+```
 http://localhost:5000/api/videos
 ```
-- Video tags api```python
+- Video tags api
+```
 http://localhost:5000/api/tags
 ```
-- Frontend: ```python
+- Frontend: 
+```
 http://localhost:8080
 ```
+
 **Note if using docker on Windows with docker toolbox localhost should be change into docker-machine ip default IP**
 
 ## TODO
@@ -43,3 +47,4 @@ http://localhost:8080
 - Expaned videos and tags filters
 - In case of a lot of channel and videos and their statistics scraping consider a nosql database(mongodb, couchdb) instead of (or with) mysql.
 - Code forntend app using js framework such as angularjs or react.js
+
