@@ -18,3 +18,10 @@ def to_int(value):
         return int(value)
     except TypeError:
         return False
+
+
+def to_float(value):
+    try:
+        return float(value)
+    except TypeError:
+        return False

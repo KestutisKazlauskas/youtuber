@@ -25,7 +25,7 @@ class TagView(MainMethodView):
 
         if tags:
             count = tags.count()
-            tags.limit(limit).offset(offset).all()
+            tags = tags.limit(limit).offset(offset)
             data = {
                 'items': [tag.serialize for tag in tags],
                 'count': count

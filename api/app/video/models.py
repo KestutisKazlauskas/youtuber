@@ -41,8 +41,16 @@ class Video(db.Model):
             'id': self.id,
             'name': self.name,
             'published_at': datetime_to_string(self.published_at),
+            'performance': self.performance,
             'tags': self.tags_serialize
         }
+
+    @property
+    def performance(self):
+        if self.first_hour_views:
+            if self.channel.views_median:
+                return self.first_hour_views/self.channel.views_median
+        return 0
 
     @property
     def tags_serialize(self):
