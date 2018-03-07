@@ -167,6 +167,16 @@
             loadData(data);
         }
     });
+    $("#performance").on("keyup", function(){
+        $.ajax({
+            type: "GET",
+            url: "http://localhost:5000/api/videos",
+            data: "performance="+$(this).val(),
+            success: function (data) {
+                loadData(data);
+            }
+        });
+    })
     $("#refresh").on("click", function(){
         $.ajax({
             type: "GET",
