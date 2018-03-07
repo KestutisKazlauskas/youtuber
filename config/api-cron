@@ -1,0 +1,2 @@
+0 23 * * 0    /home/api/env/bin/python3 /home/api/backend/manage.py clean
+*/20 * * * *  /home/api/env/bin/python3 /home/api/backend/manage.py scrape

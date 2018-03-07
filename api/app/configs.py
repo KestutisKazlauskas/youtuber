@@ -5,7 +5,9 @@ class MainConfig:
     """Main Class for config"""
     DEBUG = False
     SECRET = os.getenv('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')
+    SQLALCHEMY_DATABASE_URI = "mysql://%s:%s@database/%s?use_unicode=1&charset=utf8" % (
+        os.getenv('MYSQL_USER'), os.getenv('MYSQL_PASSWORD'), os.getenv('MYSQL_DATABASE')
+    )
 
 
 class DevelopmentConfig(MainConfig):

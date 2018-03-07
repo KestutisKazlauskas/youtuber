@@ -20,8 +20,11 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def seed():
     """Mehtod for adding hardcoded channel"""
-    db.session.add(Channel(name='Laisvės TV', id="UCMfPBtm9CWGswAXohT5MFyQ"))
-    db.session.commit()
+    channel = Channel.query.filter(Channel.id == "UCMfPBtm9CWGswAXohT5MFyQ").first()
+    if not channel:
+        db.session.add(Channel(name='Laisvės TV', id="UCMfPBtm9CWGswAXohT5MFyQ"))
+        db.session.commit()
+
 
 @manager.command
 def clean():
