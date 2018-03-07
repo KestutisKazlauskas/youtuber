@@ -18,6 +18,7 @@ google-api-python-client = "*"
 flask-script = "*"
 mysqlclient = "*"
 python-dateutil = "*"
+flask-cors = "*"
 
 
 [dev-packages]

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "a5923ab8114cdc31976a5447b00ef538958fca13e711e315abde50f1d21e6a4d"
+            "sha256": "c144e2206492dce8584a2f5adb4eed580092b6aa74ac895afad73c2fc0e94c43"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -74,6 +74,14 @@
                 "sha256:fc10a80a13ea6fcf04acc2b1835aea05ec44aa6ae94f2ee85e52cd068567ce35"
             ],
             "version": "==1.0"
+        },
+        "flask-cors": {
+            "hashes": [
+                "sha256:55eb3864b4290f939ff19a2250fcb47d8c0f63d250c6780b922629299d011ec8",
+                "sha256:ac4b81b3d90f5f18714c995c807f94501df8c9bbc22ef4261c1cd850748c3850",
+                "sha256:62ebc5ad80dc21ca0ea9f57466c2c74e24a62274af890b391790c260eb7b754b"
+            ],
+            "version": "==3.0.3"
         },
         "flask-migrate": {
             "hashes": [
@@ -261,9 +269,9 @@
         },
         "sqlalchemy": {
             "hashes": [
-                "sha256:6997507af46b10630e13b605ac278b78885fd683d038896dbee0e7ec41d809d2"
+                "sha256:249000654107a420a40200f1e0b555a79dfd4eff235b2ff60bc77714bd045f2d"
             ],
-            "version": "==1.2.4"
+            "version": "==1.2.5"
         },
         "uritemplate": {
             "hashes": [
