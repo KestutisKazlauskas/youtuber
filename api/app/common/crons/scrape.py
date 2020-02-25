@@ -128,7 +128,7 @@ class YoutubeChannelScrapeJob:
 
     def run(self):
         """Method for running crontjob of youtube channel videos scraping"""
-        channels = Channel.query.all()
+        channels = Channel.query.filter(Channel.views_median is None).all()
         for channel in channels:
             youtube = YouTubeApi(self.app_config['YOUTUBE_API_KEY'])
 
@@ -141,17 +141,9 @@ class YoutubeChannelScrapeJob:
                     videos = youtube.get_videos_stats(video_ids)
                     self._insert_videos(videos, channel.id)
 
-                    tags = []
-                    for video in videos:
-                        if video.get('tags'):
-                            tags.extend(video.get('tags'))
+            # Update to not scrape channel again if it is scraped
+            db.session.query(Channel).filter(
+                Channel.id == channel.id
+            ).update({'views_median': 1})
 
-                    if tags:
-                        self._insert_tags(list(set(tags)))
-                        self._video_tag_relation(videos)
-
-                    self._count_first_hour_view(videos, self.range)
-                    self._insert_statistics(videos)
-
-            self._count_channel_median(channel.id)
         db.session.commit()

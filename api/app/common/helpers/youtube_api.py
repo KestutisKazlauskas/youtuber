@@ -67,8 +67,8 @@ class YouTubeApi:
         """Method for getting statistics of the videos"""
         if video_ids:
             response = self.youtube_client.videos().list(
-                part='id,statistics,snippet',
-                fields='items(id,snippet(channelId,publishedAt,tags,title),statistics),nextPageToken,pageInfo',
+                part='id,snippet',
+                fields='items(id,snippet(channelId,publishedAt,title)),nextPageToken,pageInfo',
                 id=','.join(video_ids),
                 maxResults=limit,
                 pageToken=page_token
@@ -82,15 +82,9 @@ class YouTubeApi:
                     {
                         'youtube_id': item['id'],
                         'name': item['snippet'].get('title', ''),
-                        'tags': item['snippet'].get('tags'),
                         'published': datetime.strptime(
                             item['snippet']['publishedAt'], self.date_format
                         ),
-                        'views': item['statistics'].get('viewCount', 0),
-                        'likes': item['statistics'].get('likeCount', 0),
-                        'dislikes': item['statistics'].get('dislikeCount', 0),
-                        'favorites': item['statistics'].get('favoriteCount', 0),
-                        'comments': item['statistics'].get('commentCount', 0),
                     }
                 )
 

@@ -29,8 +29,8 @@ RUN su api -c 'cd && virtualenv env'
 RUN su api -c '/home/api/env/bin/pip3 install -r /home/api/backend/requirements.txt'
 
 # addin crons
-RUN cp /home/docker/code/config/api-cron /etc/cron.d/api-cron
-RUN crontab /etc/cron.d/api-cron
+#RUN cp /home/docker/code/config/api-cron /etc/cron.d/api-cron
+#RUN crontab /etc/cron.d/api-cron
 
 # Removed settings files
 RUN rm -rf /home/docker/code/
