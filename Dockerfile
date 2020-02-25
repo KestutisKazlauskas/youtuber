@@ -1,4 +1,4 @@
-FROM debian
+FROM debian:9
 
 MAINTAINER kstutisk4@gmail.com
 
