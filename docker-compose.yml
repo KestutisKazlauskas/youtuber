@@ -9,7 +9,7 @@ services:
             - FLASK_APP=run.py
             - SECRET_KEY=Your_secret_string
             - APP_SETTINGS=development
-            - YOUTUBE_API_KEY=AIzaSyDZCFLUdnLUxX2eGgDkwi5b_y8bOLBb5aI
+            - YOUTUBE_API_KEY=AIzaSyBZk38K69wz_GrArKNJhOr5wpS2JD-mseA
             - MYSQL_DATABASE=youtuber
             - MYSQL_USER=youtuber
             - MYSQL_PASSWORD=change_this
@@ -20,6 +20,9 @@ services:
             - 8080:8080
         entrypoint:
           - "/bin/start.sh"
+        volumes:
+            - ./frontend:/home/api/frontend
+            - ./api:/home/api/backend
         tty: true
         stdin_open: true
 
@@ -27,6 +30,8 @@ services:
         image: mysql:5.7
         restart: always
         container_name: "mysql"
+        volumes:
+            - ./mysql:/var/lib/mysql
         ports:
             - 3306:3306
         environment:
