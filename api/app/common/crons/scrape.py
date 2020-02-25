@@ -3,6 +3,7 @@ from sqlalchemy.dialects.mysql import insert
 from sqlalchemy.orm import load_only
 from sqlalchemy.sql import text
 from statistics import median
+import MySQLdb
 
 from app import db
 from app.common.helpers.common import is_string
@@ -25,12 +26,20 @@ class YoutubeChannelScrapeJob:
         self.range = range_
 
     @staticmethod
-    def _insert_tags(tags):
-        """Method for inserting videos tags to database table"""
-        tags_values = ','.join('("{0}")'.format(tag) for tag in tags)
-        sql = 'INSERT IGNORE INTO %s (name) VALUES %s' % (Tag.__tablename__, tags_values)
+    def _chunks(_list: list, n: int) -> list:
+        """
+        Split given list l to chunks of n items
+        """
+        for i in range(0, len(_list), n):
+            yield _list[i : i + n]
 
-        db.session.execute(text(sql))
+    def _insert_tags(self, tags):
+        """Method for inserting videos tags to database table"""
+        for tag in tags:
+            query = insert(Tag).prefix_with('IGNORE').values(
+                name=tag
+            )
+            db.session.execute(query)
         db.session.commit()
 
     @staticmethod
@@ -96,11 +105,12 @@ class YoutubeChannelScrapeJob:
     def _video_tag_relation(videos):
         """Method for relationship for videos tag"""
         for video in videos:
-            tags = Tag.query.options(load_only('id')).filter(Tag.name.in_(video['tags'])).all()
+            if video.get('tags'):
+                tags = Tag.query.options(load_only('id')).filter(Tag.name.in_(video['tags'])).all()
 
-            tags_ids = ','.join('({0}, "{1}")'.format(tag.id, video['youtube_id']) for tag in tags)
-            sql = 'INSERT IGNORE INTO tags (tag_id, video_id) VALUES %s' % tags_ids
-            db.session.execute(text(sql))
+                tags_ids = ','.join('({0}, "{1}")'.format(tag.id, video['youtube_id']) for tag in tags)
+                sql = 'INSERT IGNORE INTO tags (tag_id, video_id) VALUES %s' % tags_ids
+                db.session.execute(text(sql))
         db.session.commit()
 
     @staticmethod
@@ -129,14 +139,17 @@ class YoutubeChannelScrapeJob:
                 )
                 if video_ids:
                     videos = youtube.get_videos_stats(video_ids)
+                    self._insert_videos(videos, channel.id)
 
                     tags = []
                     for video in videos:
-                        tags.extend(video['tags'])
+                        if video.get('tags'):
+                            tags.extend(video.get('tags'))
 
-                    self._insert_tags(list(set(tags)))
-                    self._insert_videos(videos, channel.id)
-                    self._video_tag_relation(videos)
+                    if tags:
+                        self._insert_tags(list(set(tags)))
+                        self._video_tag_relation(videos)
+
                     self._count_first_hour_view(videos, self.range)
                     self._insert_statistics(videos)
 

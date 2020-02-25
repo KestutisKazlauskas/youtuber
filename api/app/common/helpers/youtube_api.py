@@ -81,8 +81,8 @@ class YouTubeApi:
                 videos.append(
                     {
                         'youtube_id': item['id'],
-                        'name': item['snippet']['title'],
-                        'tags': item['snippet']['tags'],
+                        'name': item['snippet'].get('title', ''),
+                        'tags': item['snippet'].get('tags'),
                         'published': datetime.strptime(
                             item['snippet']['publishedAt'], self.date_format
                         ),
