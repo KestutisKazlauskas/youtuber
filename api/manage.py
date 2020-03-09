@@ -5,6 +5,7 @@ from flask_migrate import Migrate, MigrateCommand
 from app import db, create_app
 from app.video.models import Video, association_table, Statistic
 from app.channel.models import Channel
+from app.channel.utils import ChanelImportCSV
 from app.tags.models import Tag
 from app.common.crons.scrape import YoutubeChannelScrapeJob
 from app.common.crons.clean_statistics import CleanStatisticsJob
@@ -36,6 +37,12 @@ def clean():
 def scrape():
     """Manager command for scrape channels videos"""
     YoutubeChannelScrapeJob(app.config).run()
+
+
+@manager.command
+def import_channels():
+    """Manager command for scrape channels videos"""
+    ChanelImportCSV().read(os.path.dirname(os.path.abspath(__file__)) + '/channels.csv')
 
 
 if __name__ == '__main__':
