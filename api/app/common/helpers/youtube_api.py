@@ -9,6 +9,7 @@ class YouTubeApi:
     YOUTUBE_API_VERSION = 'v3'
 
     date_format = '%Y-%m-%dT%H:%M:%S.%fZ'
+    date_format_without_seconds = '%Y-%m-%dT%H:%M:%SZ'
 
     def __init__(self, api_key):
         self.API_KEY = api_key
@@ -32,6 +33,18 @@ class YouTubeApi:
         per_page = api_page_info.get('resultsPerPage')
 
         return int(total/per_page)
+
+    def _get_published_time(self, published_at: str) -> datetime:
+        try:
+            published = datetime.strptime(
+                published_at, self.date_format
+            )
+        except ValueError:
+            published = datetime.strptime(
+                published_at, self.date_format_without_seconds
+            )
+
+        return published
 
     def _set_page_info(self, type, api_response):
         """Method for setting next page info for channel/video api request"""
@@ -82,9 +95,7 @@ class YouTubeApi:
                     {
                         'youtube_id': item['id'],
                         'name': item['snippet'].get('title', ''),
-                        'published': datetime.strptime(
-                            item['snippet']['publishedAt'], self.date_format
-                        ),
+                        'published': self._get_published_time(item['snippet']['publishedAt']),
                     }
                 )
 

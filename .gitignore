@@ -1,5 +1,6 @@
 /.idea
 /dump
+/mysql
 *.pyc  
 .cache 
 .ropeproject 
