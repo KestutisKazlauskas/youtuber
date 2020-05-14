@@ -21,16 +21,23 @@ manager.add_command('db', MigrateCommand)
 @manager.command
 def seed():
     """Mehtod for adding hardcoded channel"""
-    channel = Channel.query.filter(Channel.id == "UCMfPBtm9CWGswAXohT5MFyQ").first()
-    if not channel:
-        db.session.add(Channel(name='Laisvės TV', id="UCMfPBtm9CWGswAXohT5MFyQ"))
-        db.session.commit()
+    pass
+    # channel = Channel.query.filter(Channel.id == "UCMfPBtm9CWGswAXohT5MFyQ").first()
+    # if not channel:
+    #     db.session.add(Channel(name='Laisvės TV', id="UCMfPBtm9CWGswAXohT5MFyQ"))
+    #     db.session.commit()
 
 
 @manager.command
 def clean():
     """Mehtod for running Statistic table cleaning job"""
     CleanStatisticsJob.run()
+
+
+@manager.command
+def update_channels_for_rescraping():
+    db.session.query(Channel).update({Channel.views_median: None})
+    db.session.commit()
 
 
 @manager.command
